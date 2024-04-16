@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Server } = require("socket.io");
+// const { Server } = require("socket.io");
 const http = require('http');
 const cors = require('cors');
 const mondaySdk = require('monday-sdk-js');
@@ -32,16 +32,16 @@ const obtainInputParams = (extractedParams) => {
   const includesGloss = printSettings.includes('GLOSS') ? true : false
   const includesColor = printSettings.includes('CMYK') ? true : false
 
-  const colorPercent = parseFloat(extractedParams.filter(param => param.label === 'numbers7')[0].value)
-  const colorPasses = parseInt(extractedParams.filter(param => param.label === 'numbers5')[0].value)
-  const whitePercent = parseFloat(extractedParams.filter(param => param.label === 'numbers1')[0].value)
-  const whitePasses = parseInt(extractedParams.filter(param => param.label === 'numbers14')[0].value)
-  const glossPercent = parseFloat(extractedParams.filter(param => param.label === 'numbers4')[0].value)
-  const glossPasses = parseInt(extractedParams.filter(param => param.label === 'numbers72')[0].value)
+  const colorPercent = parseFloat(extractedParams.filter(param => param.label === 'numbers8')[0].value)
+  const colorPasses = parseInt(extractedParams.filter(param => param.label === 'numbers7')[0].value)
+  const whitePercent = parseFloat(extractedParams.filter(param => param.label === 'numbers4')[0].value)
+  const whitePasses = parseInt(extractedParams.filter(param => param.label === 'numbers95')[0].value)
+  const glossPercent = parseFloat(extractedParams.filter(param => param.label === 'numbers82')[0].value)
+  const glossPasses = parseInt(extractedParams.filter(param => param.label === 'numbers6')[0].value)
 
-  const targetCost = parseFloat(extractedParams.filter(param => param.label === 'numbers2')[0].value)
-  const tax = extractedParams.filter(param => param.label === 'status_11')[0].value === 'Yes' ? true : false
-  const commission = extractedParams.filter(param => param.label === 'status_1')[0].value === 'Yes' ? true : false
+  const targetCost = parseFloat(extractedParams.filter(param => param.label === 'numbers87')[0].value)
+  const tax = extractedParams.filter(param => param.label === 'status_1')[0].value === 'Yes' ? true : false
+  const commission = extractedParams.filter(param => param.label === 'status_2')[0].value === 'Yes' ? true : false
 
   console.log("Print Settings: ", printSettings)
   // const includeColor = extractedParams.filter(param => param.label === 'dropdown0')[0].value
@@ -96,7 +96,7 @@ const getJobCost = async (params, webhook) => {
 
       const modifyQuery = `
         mutation {
-          change_multiple_column_values(item_id: ${itemId}, board_id: ${boardId}, column_values: "{\\"numbers34\\": \\"${jobCostData.costOfGoodsPerPrintJob}\\", \\"numbers3\\": \\"${jobCostData.perPrintTotal}\\", \\"numbers38\\": \\"${jobCostData.jobTotal}\\"}") {
+          change_multiple_column_values(item_id: ${itemId}, board_id: ${boardId}, column_values: "{\\"numbers1\\": \\"${jobCostData.costOfGoodsPerPrintJob}\\", \\"numbers3\\": \\"${jobCostData.perPrintTotal}\\", \\"numbers11\\": \\"${jobCostData.jobTotal}\\"}") {
             id
             column_values {
               id
@@ -169,20 +169,20 @@ server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-const io = new Server(server, {
-  cors: {
-    // Specify the exact client origin
-    origin: "https://c8a22a9bcbe5.ngrok.app",
-    methods: ["GET", "POST"],
-    // credentials: true // allowing credentials
-  }
-});
+// const io = new Server(server, {
+//   cors: {
+//     // Specify the exact client origin
+//     origin: "https://c8a22a9bcbe5.ngrok.app",
+//     methods: ["GET", "POST"],
+//     // credentials: true // allowing credentials
+//   }
+// });
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.emit('FromAPI', { data: 'Hello from Server!' });
-  console.log('Emitting data to client')
-});
+// io.on('connection', (socket) => {
+//   console.log('a user connected');
+//   socket.emit('FromAPI', { data: 'Hello from Server!' });
+//   console.log('Emitting data to client')
+// });
 
 // app.use(cors({
 //   origin: 'http://localhost:3000', // Allow only this origin to access
@@ -195,7 +195,7 @@ app.post('/webhook', (req, res) => {
   if (req.body.challenge) {
     console.log('Received challenge:', req.body.challenge);
     // Respond with the challenge token
-    io.emit('FromAPI', req.body);
+    // io.emit('FromAPI', req.body);
     res.json({ challenge: req.body.challenge });
     
   } else {
